@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Stay | WorkNStay</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f6f8fc;color:#172033}
+header{background:white;padding:18px 6%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:bold;color:#2457d6}
+.logo span{color:#12a47b}
+nav a{margin-left:15px;text-decoration:none;color:#344054}
+.hero{background:linear-gradient(135deg,#e8f0ff,#e5fff4);padding:55px 18px;text-align:center}
+.hero h1{font-size:36px;margin-bottom:12px}
+.hero p{color:#596579;line-height:1.6}
+.search{display:flex;gap:9px;max-width:700px;margin:25px auto 0}
+input,select{padding:14px;border:1px solid #dce1eb;border-radius:9px;background:white;font-size:14px;min-width:0}
+.search input{flex:1}
+button{padding:14px 19px;background:#2457d6;color:white;border:0;border-radius:9px;font-weight:bold;cursor:pointer}
+main{max-width:1050px;margin:35px auto;padding:0 17px}
+h2{font-size:23px;margin-bottom:17px}
+.types{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;margin-bottom:30px}
+.type{background:white;border:1px solid #e6eaf1;padding:20px 10px;border-radius:12px;text-align:center;cursor:pointer}
+.type strong{display:block;margin-top:9px;font-size:14px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px}
+.filters select{flex:1}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:16px}
+.card{background:white;border:1px solid #e6eaf1;padding:20px;border-radius:13px}
+.card h3{margin:13px 0}
+.card p{font-size:14px;color:#667085;line-height:1.9}
+.label{display:inline-block;padding:7px 10px;border-radius:20px;font-size:11px;font-weight:bold}
+.owner{background:#e8f0ff;color:#2457d6}
+.pg{background:#e6f8ed;color:#16834c}
+.broker{background:#fff0df;color:#a65b13}
+.note{background:#fff8e8;color:#75551a;padding:15px;border-radius:10px;margin:20px 0;font-size:13px;line-height:1.7}
+.empty{display:none;background:white;padding:25px;border-radius:12px;text-align:center}
+footer{text-align:center;padding:30px;color:#667085;font-size:13px}
+@media(max-width:550px){.search{flex-direction:column}.hero h1{font-size:29px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">Work<span>N</span>Stay</div>
+<nav><a href="index.html">Home</a><a href="work.html">Work</a></nav>
+</header>
+
+<section class="hero">
+<h1>Find Your Perfect Stay.</h1>
+<p>Explore Rooms, PGs and Shared Accommodation across India.</p>
+<div class="search">
+<input id="keyword" placeholder="Room, PG or location">
+<input id="city" placeholder="Enter city">
+<button onclick="searchStay()">Search</button>
+</div>
+</section>
+
+<main>
+<h2>Explore Accommodation</h2>
+<div class="types">
+<div class="type" onclick="chooseType('Room')">🏠<strong>Private Rooms</strong></div>
+<div class="type" onclick="chooseType('PG')">🏢<strong>PG Accommodation</strong></div>
+<div class="type" onclick="chooseType('Flat')">🏡<strong>Flats</strong></div>
+<div class="type" onclick="chooseType('Shared')">🛏️<strong>Shared Rooms</strong></div>
+</div>
+
+<h2>Find Available Listings</h2>
+<div class="filters">
+<select id="property" onchange="filterStay()">
+<option value="">All Property Types</option>
+<option>Room</option><option>PG</option>
+<option>Flat</option><option>Shared</option>
+</select>
+<select id="provider" onchange="filterStay()">
+<option value="">All Providers</option>
+<option>Owner</option>
+<option>PG Operator</option>
+<option>Broker</option>
+</select>
+</div>
+
+<div class="note">
+DEMO NOTICE: These are sample listings, not verified or actually available properties. All providers must display their correct identity label. Verification will be introduced after backend development.
+</div>
+
+<div class="cards" id="listings">
+
+<div class="card" data-type="Room" data-provider="Owner">
+<span class="label owner">OWNER</span>
+<h3>Private Room – Sample</h3>
+<p>Property: Private Room<br>City: Lucknow<br>Provider: Owner<br>Rent: Demo only</p>
+</div>
+
+<div class="card" data-type="PG" data-provider="PG Operator">
+<span class="label pg">PG OPERATOR</span>
+<h3>Student PG – Sample</h3>
+<p>Property: PG Accommodation<br>City: Delhi<br>Provider: PG Operator<br>Rent: Demo only</p>
+</div>
+
+<div class="card" data-type="Flat" data-provider="Broker">
+<span class="label broker">BROKER</span>
+<h3>Family Flat – Sample</h3>
+<p>Property: Flat<br>City: Mumbai<br>Provider: Broker<br>Rent: Demo only</p>
+</div>
+
+<div class="card" data-type="Shared" data-provider="Owner">
+<span class="label owner">OWNER</span>
+<h3>Shared Room – Sample</h3>
+<p>Property: Shared Room<br>City: Lucknow<br>Provider: Owner<br>Rent: Demo only</p>
+</div>
+
+</div>
+<div class="empty" id="empty">No matching demo listings found.</div>
+</main>
+
+<footer>© 2026 WorkNStay | Demo Accommodation Marketplace</footer>
+
+<script>
+function chooseType(type){
+document.getElementById('property').value=type;
+filterStay();
+document.getElementById('listings').scrollIntoView({behavior:'smooth'});
+}
+function filterStay(){
+let type=document.getElementById('property').value;
+let provider=document.getElementById('provider').value;
+let count=0;
+document.querySelectorAll('.card').forEach(card=>{
+let matchType=!type||card.dataset.type===type;
+let matchProvider=!provider||card.dataset.provider===provider;
+card.style.display=matchType&&matchProvider?'block':'none';
+if(matchType&&matchProvider)count++;
+});
+document.getElementById('empty').style.display=count?'none':'block';
+}
+function searchStay(){
+let keyword=document.getElementById('keyword').value.toLowerCase().trim();
+let city=document.getElementById('city').value.toLowerCase().trim();
+let count=0;
+document.querySelectorAll('.card').forEach(card=>{
+let matchKeyword=!keyword||card.innerText.toLowerCase().includes(keyword);
+let matchCity=!city||card.innerText.toLowerCase().includes(city);
+card.style.display=matchKeyword&&matchCity?'block':'none';
+if(matchKeyword&&matchCity)count++;
+});
+document.getElementById('empty').style.display=count?'none':'block';
+}
+</script>
+</body>
+  </html>
+  
