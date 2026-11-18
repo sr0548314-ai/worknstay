@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Find Work | WorkNStay</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:#f6f8fc;color:#172033}
+header{background:white;padding:18px 6%;display:flex;justify-content:space-between;align-items:center}
+.logo{font-size:25px;font-weight:bold;color:#2457d6}
+.logo span{color:#12a47b}
+nav a{margin-left:15px;text-decoration:none;color:#344054}
+.hero{background:linear-gradient(135deg,#eaf0ff,#e9fff7);text-align:center;padding:55px 18px}
+.hero h1{font-size:38px;margin-bottom:12px}
+.hero p{color:#596579;line-height:1.6}
+.search{display:flex;gap:9px;max-width:650px;margin:25px auto 0}
+input,select{min-width:0;padding:14px;border:1px solid #dce1eb;border-radius:9px;background:white;font-size:14px}
+.search input{flex:1}
+button{border:0;border-radius:9px;padding:14px 20px;background:#2457d6;color:white;font-weight:bold;cursor:pointer}
+main{max-width:1050px;margin:35px auto;padding:0 17px}
+h2{font-size:23px;margin-bottom:17px}
+.categories{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:35px}
+.category{background:white;border:1px solid #e6eaf1;border-radius:12px;padding:19px 10px;text-align:center;cursor:pointer}
+.category strong{display:block;margin-top:9px;font-size:14px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.filters select{flex:1}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.job{background:white;padding:21px;border:1px solid #e6eaf1;border-radius:13px}
+.job h3{margin:10px 0}
+.job p{font-size:14px;color:#667085;line-height:1.8}
+.tag{display:inline-block;background:#eaf0ff;color:#2457d6;padding:6px 10px;border-radius:20px;font-size:12px;margin-top:12px}
+.note{margin:22px 0;background:#fff8e8;padding:15px;border-radius:10px;color:#75551a;font-size:13px;line-height:1.6}
+.empty{display:none;padding:25px;background:white;border-radius:12px;text-align:center}
+footer{text-align:center;padding:30px;color:#667085;font-size:13px}
+@media(max-width:550px){.search{flex-direction:column}.hero h1{font-size:31px}nav a{font-size:12px;margin-left:8px}}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">Work<span>N</span>Stay</div>
+<nav><a href="index.html">Home</a><a href="stay.html">Stay</a></nav>
+</header>
+
+<section class="hero">
+<h1>Find Your Next <span style="color:#2457d6">Job.</span></h1>
+<p>Explore job opportunities across India with WorkNStay.</p>
+<div class="search">
+<input id="keyword" placeholder="Job title or skill">
+<input id="city" placeholder="City">
+<button onclick="searchJobs()">Search</button>
+</div>
+</section>
+
+<main>
+<h2>Explore Job Categories</h2>
+<div class="categories">
+<div class="category" onclick="choose('Hotel')">🏨<strong>Hotel Jobs</strong></div>
+<div class="category" onclick="choose('Office')">💻<strong>Office Jobs</strong></div>
+<div class="category" onclick="choose('Delivery')">🛵<strong>Delivery Jobs</strong></div>
+<div class="category" onclick="choose('Sales')">🛍️<strong>Sales Jobs</strong></div>
+<div class="category" onclick="choose('Other')">💼<strong>Other Jobs</strong></div>
+</div>
+
+<h2>Job Listings</h2>
+<div class="filters">
+<select id="category" onchange="filterJobs()">
+<option value="">All Categories</option>
+<option>Hotel</option><option>Office</option>
+<option>Delivery</option><option>Sales</option><option>Other</option>
+</select>
+<select id="type" onchange="filterJobs()">
+<option value="">All Job Types</option>
+<option>Full Time</option><option>Part Time</option>
+<option>Night Shift</option>
+</select>
+</div>
+
+<div class="note">Demo page: These are sample listings, not real vacancies. Real employers and verified job details will be added after the backend is built.</div>
+
+<div class="cards" id="jobs">
+<div class="job" data-category="Hotel" data-type="Full Time Night Shift">
+<span class="tag">Hotel</span>
+<h3>Hotel Staff – Sample</h3>
+<p>Category: Reception / Housekeeping<br>Location: Lucknow<br>Type: Full Time</p>
+</div>
+<div class="job" data-category="Office" data-type="Full Time">
+<span class="tag">Office</span>
+<h3>Office Assistant – Sample</h3>
+<p>Category: Administration<br>Location: Delhi<br>Type: Full Time</p>
+</div>
+<div class="job" data-category="Delivery" data-type="Part Time">
+<span class="tag">Delivery</span>
+<h3>Delivery Partner – Sample</h3>
+<p>Category: Delivery<br>Location: Mumbai<br>Type: Part Time</p>
+</div>
+<div class="job" data-category="Sales" data-type="Full Time">
+<span class="tag">Sales</span>
+<h3>Sales Executive – Sample</h3>
+<p>Category: Sales<br>Location: Lucknow<br>Type: Full Time</p>
+</div>
+</div>
+<div class="empty" id="empty">No matching demo listings found.</div>
+</main>
+
+<footer>© 2026 WorkNStay | Demo listings only</footer>
+
+<script>
+function choose(value){
+document.getElementById('category').value=value;
+filterJobs();
+document.getElementById('jobs').scrollIntoView({behavior:'smooth'});
+}
+function filterJobs(){
+let category=document.getElementById('category').value;
+let type=document.getElementById('type').value;
+let count=0;
+document.querySelectorAll('.job').forEach(job=>{
+let matchCategory=!category||job.dataset.category===category;
+let matchType=!type||job.dataset.type.includes(type);
+job.style.display=matchCategory&&matchType?'block':'none';
+if(matchCategory&&matchType)count++;
+});
+document.getElementById('empty').style.display=count?'none':'block';
+}
+function searchJobs(){
+let keyword=document.getElementById('keyword').value.toLowerCase().trim();
+let city=document.getElementById('city').value.toLowerCase().trim();
+let count=0;
+document.querySelectorAll('.job').forEach(job=>{
+let match=(job.innerText.toLowerCase().includes(keyword))&&(job.innerText.toLowerCase().includes(city));
+job.style.display=match?'block':'none';
+if(match)count++;
+});
+document.getElementById('empty').style.display=count?'none':'block';
+}
+</script>
+</body>
+  </html>
+  
